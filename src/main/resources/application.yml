@@ -1,0 +1,14 @@
+open-weather-api:
+  api-key: 0bbd0757991d59dd57c56b122a54e548
+  urls:
+    root: https://api.openweathermap.org/
+    forecast:
+      url: ${open-weather-api.urls.root}/data/3.0/onecall?exclude=${open-weather-api.urls.forecast.params.exclude}&appid=${open-weather-api.api-key}
+      params:
+        exclude: minutely,daily,current
+    location:
+      url: ${open-weather-api.urls.root}/geo/1.0/direct?limit=${open-weather-api.urls.location.params.limit}&appid=${open-weather-api.api-key}
+      params:
+        limit: 1
+
+
