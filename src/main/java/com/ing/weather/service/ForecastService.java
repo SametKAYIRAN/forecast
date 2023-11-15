@@ -1,6 +1,7 @@
 package com.ing.weather.service;
 
 import com.ing.weather.dto.forecast.ForecastDataDto;
+import com.ing.weather.dto.openweather.forecast.OpenForecastDataDto;
 import com.ing.weather.dto.openweather.forecast.OpenForecastResponseDto;
 import com.ing.weather.dto.openweather.location.OpenLocationResponseDto;
 import com.ing.weather.enums.ErrorCode;
@@ -11,6 +12,7 @@ import com.ing.weather.mapper.ForecastDataDtoMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,6 +40,26 @@ public class ForecastService {
         } else {
             return Optional.of(locations.get(0));
         }
+    }
+
+    private float getMaxFeelsLike(List<OpenForecastDataDto> hourly) {
+        OpenForecastDataDto openForecastDataDto = hourly.stream()
+                .max(Comparator.comparing(OpenForecastDataDto::getFeelsLike)).orElseThrow(
+                        () -> {
+                            throw new BusinessException(ErrorCode.MAX_FEELS_LIKE_NOT_FOUND);
+                        }
+                );
+        return openForecastDataDto.getFeelsLike();
+    }
+
+    private float getMaxHumidity(List<OpenForecastDataDto> hourly) {
+        OpenForecastDataDto openForecastDataDto = hourly.stream()
+                .max(Comparator.comparing(OpenForecastDataDto::getHumidity)).orElseThrow(
+                        () -> {
+                            throw new BusinessException(ErrorCode.MAX_HUMIDITY_NOT_FOUND);
+                        }
+                );
+        return openForecastDataDto.getTemp();
     }
 
 }
